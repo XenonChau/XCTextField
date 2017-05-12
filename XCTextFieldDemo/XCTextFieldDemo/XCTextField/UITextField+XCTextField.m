@@ -82,7 +82,21 @@
 
 - (void)becomeFirstResponderWhenFirstIncorrect {
     
-    for (UIView *subview in self.superview.subviews) {
+//    for (UIView *subview in self.superview.subviews) {
+//        if ([subview isKindOfClass:[UITextField class]]) {
+//            UITextField *textField = (UITextField *)subview;
+//            if (!textField.correct) {
+//                [textField becomeFirstResponder];
+//                break;
+//            }
+//        }
+//    }
+    [[self class] howCanIUseSelfInClassMethod];
+}
+
++ (void)howCanIUseSelfInClassMethod {
+    
+    for (UIView *subview in [(__bridge UIView *)class_getProperty([UIView class], "superview") subviews]) {
         if ([subview isKindOfClass:[UITextField class]]) {
             UITextField *textField = (UITextField *)subview;
             if (!textField.correct) {
