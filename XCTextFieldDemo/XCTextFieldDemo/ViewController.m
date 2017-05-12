@@ -9,48 +9,41 @@
 #import "ViewController.h"
 #import "UITextField+XCTextField.h"
 
-@interface ViewController ()
+@interface ViewController () <UITextFieldDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *cellPhoneTextField;
+@property (weak, nonatomic) IBOutlet UITextField *IDCardTextField;
+@property (weak, nonatomic) IBOutlet UITextField *emailTextField;
+@property (weak, nonatomic) IBOutlet UITextField *creditCardTextField;
+@property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (weak, nonatomic) IBOutlet UITextField *CAPTCHATextField;
 
+@property (weak, nonatomic) IBOutlet UIButton *checkButton;
 @end
 
 @implementation ViewController
-{
-    UITextField *cellPhoneTF;
-    UITextField *emailTF;
-    UITextField *pwdTF;
-}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    cellPhoneTF = [[UITextField alloc] initWithFrame:(CGRect){20, 100, 230, 30}];
-    cellPhoneTF.placeholder = @"请输入手机号";
-    [cellPhoneTF configurationWithType:ECTextFieldTypeCellphone];
-    [self.view addSubview:cellPhoneTF];
     
-    emailTF = [[UITextField alloc] initWithFrame:(CGRect){20, 140, 230, 30}];
-    emailTF.placeholder = @"请输入Email";
-    [emailTF configurationWithType:ECTextFieldTypeEmail];
-    [self.view addSubview:emailTF];
+    [_cellPhoneTextField configurationWithType:XCTextFieldTypeCellphone];
+    [_IDCardTextField configurationWithType:XCTextFieldTypeIDCard];
+    [_emailTextField configurationWithType:XCTextFieldTypeEmail];
+    [_creditCardTextField configurationWithType:XCTextFieldTypeCreditCard];
+    [_passwordTextField configurationWithType:XCTextFieldTypePassword];
+    [_CAPTCHATextField configurationWithType:XCTextFieldTypeCAPTCHA];
     
-    pwdTF = [[UITextField alloc] initWithFrame:(CGRect){20, 180, 230, 30}];
-    pwdTF.placeholder = @"请输入密码";
-    [pwdTF configurationWithType:ECTextFieldTypePassword];
-    [self.view addSubview:pwdTF];
-    
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = (CGRect){ 20, 220, 90, 30};
-    [btn setTitle:@"字段检查" forState:UIControlStateNormal];
-    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [btn addTarget:self action:@selector(btnAct:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.view addSubview:btn];
 }
 
-- (void)btnAct:(UIButton *)btn {
-    [cellPhoneTF fieldTypeCheck];
-    [emailTF fieldTypeCheck];
-    [pwdTF fieldTypeCheck];
+- (IBAction)checkButtonAction:(UIButton *)button {
+    
+    for (UIView *subview in self.view.subviews) {
+        if ([subview isKindOfClass:[UITextField class]]) {
+            [(UITextField *)subview fieldTypeCheck];
+        }
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -58,5 +51,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    for (UIView *subview in self.view.subviews) {
+        if ([subview isKindOfClass:[UITextField class]]) {
+            [(UITextField *)subview resignFirstResponder];
+        }
+    }
+    return YES;
+}
 
 @end

@@ -82,21 +82,7 @@
 
 - (void)becomeFirstResponderWhenFirstIncorrect {
     
-//    for (UIView *subview in self.superview.subviews) {
-//        if ([subview isKindOfClass:[UITextField class]]) {
-//            UITextField *textField = (UITextField *)subview;
-//            if (!textField.correct) {
-//                [textField becomeFirstResponder];
-//                break;
-//            }
-//        }
-//    }
-    [[self class] howCanIUseSelfInClassMethod];
-}
-
-+ (void)howCanIUseSelfInClassMethod {
-    
-    for (UIView *subview in [(__bridge UIView *)class_getProperty([UIView class], "superview") subviews]) {
+    for (UIView *subview in self.superview.subviews) {
         if ([subview isKindOfClass:[UITextField class]]) {
             UITextField *textField = (UITextField *)subview;
             if (!textField.correct) {
@@ -105,32 +91,47 @@
             }
         }
     }
+//    [[self class] howCanIUseSelfInClassMethod];
+}
+
++ (void)howCanIUseSelfInClassMethod {
     
+    for (UIView *subview in [(__bridge UIView *)class_getProperty([UIView class], "superview") subviews]) {
+        if ([subview isKindOfClass:self]) {
+            UITextField *textField = (UITextField *)subview;
+            if (!textField.correct) {
+                [textField becomeFirstResponder];
+                break;
+            }
+        }
+    }
+    NSLog(@"%@", self);
 }
 
 - (void)fieldTypeCheck {
     
     if (!self.text.length) {
         self.checkResult = [NSString stringWithFormat:@"%@, Empty textField.", self];
-        [self incorrectTextField];
+        [self incorrectAnimation];
         [self becomeFirstResponderWhenFirstIncorrect];
         return;
     }
     
     switch (self.fieldType) {
-        case ECTextFieldTypeEmail: {
-            NSString *emailRegEx = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-            NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
-            if (![emailTest evaluateWithObject:self.text]) {
-                self.checkResult = @"Email Address in invalid format.";
-                [self incorrectTextField];
-            } else {
-                [self correctTextField];
-            }
+        case XCTextFieldTypeEmail: {
+            [self emailCheck];
             break;
         }
+        case XCTextFieldTypeIDCard: {
+            [self IDCardCheck];
+            break;
+        }
+//        case XCTextFieldTypePassword: {
+//            
+//            break;
+//        }
         default: {
-            [self correctTextField];
+            [self correctAnimation];
             break;
         }
     }
@@ -138,7 +139,7 @@
     [self becomeFirstResponderWhenFirstIncorrect];
 }
 
-- (void)correctTextField {
+- (void)correctAnimation {
     //    NSLog(@"get radius = %f", self.cornerRadius);
     //    NSLog(@"get width = %f", self.borderWidth);
     //    NSLog(@"get color = %@", self.borderColor);
@@ -155,7 +156,7 @@
     }];
 }
 
-- (void)incorrectTextField {
+- (void)incorrectAnimation {
     NSLog(@"%zi", self.fieldType);
     self.correct = NO;
     [UIView animateWithDuration:0.9f animations:^{
@@ -200,23 +201,39 @@
     //    NSLog(@"set color = %@", [UIColor colorWithCGColor:self.borderColor]);
     
     switch (type) {
-        case ECTextFieldTypeCellphone: {
-            self.keyboardType  = UIKeyboardTypeNamePhonePad;
+        case XCTextFieldTypeCellphone: {
+            self.keyboardType  = UIKeyboardTypePhonePad;
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
             self.textContentType = UITextContentTypeTelephoneNumber;
 #endif
             break;
         }
-        case ECTextFieldTypePassword: {
+        case XCTextFieldTypePassword: {
             self.secureTextEntry = YES;
             self.keyboardType = UIKeyboardTypeASCIICapable;
             break;
         }
-        case ECTextFieldTypeEmail: {
+        case XCTextFieldTypeEmail: {
             self.keyboardType = UIKeyboardTypeEmailAddress;
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
             self.textContentType = UITextContentTypeEmailAddress;
 #endif
+            break;
+        }
+        case XCTextFieldTypeCAPTCHA: {
+            self.keyboardType = UIKeyboardTypeNamePhonePad;
+            break;
+        }
+        case XCTextFieldTypeCreditCard: {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+            self.textContentType = UITextContentTypeCreditCardNumber;
+#else
+            self.keyboardType = UIKeyboardTypeNumberPad;
+#endif
+            break;
+        }
+        case XCTextFieldTypeIDCard: {
+            self.keyboardType = UIKeyboardTypeNamePhonePad;
             break;
         }
         default: {
@@ -224,6 +241,73 @@
             break;
         }
     }
+}
+
+#pragma mark - Text Field Check
+
+- (void)emailCheck {
+    NSString *emailRegEx = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
+    if (![emailTest evaluateWithObject:self.text]) {
+        self.checkResult = @"Email Address in invalid format.";
+        [self incorrectAnimation];
+    } else {
+        [self correctAnimation];
+    }
+}
+
+- (void)creditCardCheck {
+    /** Luhn algorithm
+        @see https://en.wikipedia.org/wiki/Luhn_algorithm
+     */
+}
+
+- (void)IDCardCheck {
+    /**
+        @brief 中国大陆居民身份证算法
+        地址码: 前六位
+        生日期码: 七到十四位
+        顺序码: 十五到十七位（17位：奇数为男性，偶数为女性）
+        校验码: 最后一位 ISO 7064:1983.MOD 11-2
+        前十七位系数: {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2}
+        每位的数字和对应的系数相乘后相加，后对11取余。
+        余数对照表: {"1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"}
+     */
+    
+    if (self.text.length != 18) {
+        [self incorrectAnimation];
+        return;
+    }
+    
+    if (checkIDCard(self.text.UTF8String)) {
+        [self correctAnimation];
+    } else {
+        [self incorrectAnimation];
+    }
+}
+
+bool checkIDCard(const char *idCardString) {
+    
+    long long strLen = strlen(idCardString);
+    char lastChar = idCardString[strLen - 1];
+    int factors[] = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+    char * retrieve[] = {"1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"};
+    
+    long long sum = 0;
+    for (int i = 0; i < strLen - 1; i ++) {
+        char c = idCardString[i];
+        sum += (c - 48) * factors[i];
+    }
+    
+    int position = sum % 11;
+    char code = *retrieve[position];
+    
+    if (code == lastChar) {
+        return true;
+    } else {
+        return false;
+    }
+    
 }
 
 @end

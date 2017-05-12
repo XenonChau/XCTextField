@@ -326,6 +326,7 @@
 				740D00CD1EC603E70014C2D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

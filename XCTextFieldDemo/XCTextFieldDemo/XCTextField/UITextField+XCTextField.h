@@ -9,11 +9,13 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSInteger, XCTextFieldType) {
-    ECTextFieldTypeDefault = 0,
-    ECTextFieldTypeCellphone = 1,
-    ECTextFieldTypeEmail = 2,
-    ECTextFieldTypePassword = 3,
-    ECTextFieldTypeCAPTCHA = 4,
+    XCTextFieldTypeDefault = 0,
+    XCTextFieldTypeCellphone = 1,
+    XCTextFieldTypeEmail = 2,
+    XCTextFieldTypePassword = 3,
+    XCTextFieldTypeCAPTCHA = 4,
+    XCTextFieldTypeCreditCard = 5,
+    XCTextFieldTypeIDCard = 6,
 };
 
 @interface UITextField (XCTextField)
@@ -25,7 +27,5 @@ typedef NS_ENUM(NSInteger, XCTextFieldType) {
 - (void)configurationWithType:(XCTextFieldType)type;
 
 - (void)fieldTypeCheck;
-- (void)incorrectTextField;
-- (void)correctTextField;
 
 @end
