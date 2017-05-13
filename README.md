@@ -15,6 +15,10 @@ For check: `- inputCheckForceCorrect:`
 3. `#import "UITextField+XCTextField.h"`
 4. Have fun.
 
+## Sample GIF:
+
+![](./sample.gif)
+
 ## Sample Code:
 
 ```objc
