@@ -40,10 +40,14 @@
     
     for (UIView *subview in self.view.subviews) {
         if ([subview isKindOfClass:[UITextField class]]) {
-            [(UITextField *)subview fieldTypeCheck];
+            [(UITextField *)subview inputCheckForceCorrect:YES];
         }
     }
     
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    [textField inputCheckForceCorrect:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -52,12 +56,18 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    
     for (UIView *subview in self.view.subviews) {
         if ([subview isKindOfClass:[UITextField class]]) {
             [(UITextField *)subview resignFirstResponder];
         }
     }
-    return YES;
 }
+
 
 @end

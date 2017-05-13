@@ -21,7 +21,10 @@
 @dynamic checkResult;
 
 - (void)setFieldType:(XCTextFieldType)newFieldType {
-    objc_setAssociatedObject(self, @selector(fieldType), @(newFieldType), OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self,
+                             @selector(fieldType),
+                             @(newFieldType),
+                             OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (XCTextFieldType)fieldType {
@@ -42,19 +45,19 @@
 - (void)setBorderColor:(CGColorRef)newBorderColor {
     objc_setAssociatedObject(self,
                              @selector(borderColor),
-                             [UIColor colorWithCGColor:newBorderColor], // <- 这个地方存不住
-                             OBJC_ASSOCIATION_COPY_NONATOMIC);
+                             CFBridgingRelease(CGColorCreateCopy(newBorderColor)),
+                             OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (CGColorRef)borderColor {
-    return [objc_getAssociatedObject(self, _cmd) CGColor];
+    return (__bridge CGColorRef)(objc_getAssociatedObject(self, _cmd));
 }
 
 - (void)setBorderWidth:(CGFloat)newBorderWidth {
     objc_setAssociatedObject(self,
                              @selector(borderWidth),
-                             @(newBorderWidth),//[NSNumber numberWithFloat:newBorderWidth],
-                             OBJC_ASSOCIATION_ASSIGN);
+                             @(newBorderWidth),
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (CGFloat)borderWidth {
@@ -64,8 +67,8 @@
 - (void)setCornerRadius:(CGFloat)newCornerRadius {
     objc_setAssociatedObject(self,
                              @selector(cornerRadius),
-                             @(newCornerRadius), // <- 语法糖强制舍去小数点后面数字
-                             OBJC_ASSOCIATION_ASSIGN);
+                             @(newCornerRadius),
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (CGFloat)cornerRadius {
@@ -73,7 +76,10 @@
 }
 
 - (void)setCorrect:(BOOL)correct {
-    objc_setAssociatedObject(self, @selector(correct), @(correct), OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self,
+                             @selector(correct),
+                             @(correct),
+                             OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (BOOL)correct {
@@ -96,6 +102,12 @@
 
 + (void)howCanIUseSelfInClassMethod {
     
+    /**
+      * 一个科学试验：在 + 方法中找到 self 的对象指针。
+      *
+     */
+    
+    
     for (UIView *subview in [(__bridge UIView *)class_getProperty([UIView class], "superview") subviews]) {
         if ([subview isKindOfClass:self]) {
             UITextField *textField = (UITextField *)subview;
@@ -108,12 +120,12 @@
     NSLog(@"%@", self);
 }
 
-- (void)fieldTypeCheck {
+- (void)inputCheckForceCorrect:(BOOL)flag {
     
     if (!self.text.length) {
         self.checkResult = [NSString stringWithFormat:@"%@, Empty textField.", self];
         [self incorrectAnimation];
-        [self becomeFirstResponderWhenFirstIncorrect];
+        !flag ? : [self becomeFirstResponderWhenFirstIncorrect];
         return;
     }
     
@@ -131,40 +143,48 @@
 //            break;
 //        }
         default: {
-            [self correctAnimation];
+            self.correct ? : [self correctAnimation];
             break;
         }
     }
     
-    [self becomeFirstResponderWhenFirstIncorrect];
+    !flag ? : [self becomeFirstResponderWhenFirstIncorrect];
 }
 
 - (void)correctAnimation {
-    //    NSLog(@"get radius = %f", self.cornerRadius);
-    //    NSLog(@"get width = %f", self.borderWidth);
-    //    NSLog(@"get color = %@", self.borderColor);
+    
+    NSLog(@"get radius = %f", self.cornerRadius);
+    NSLog(@"get width = %f", self.borderWidth);
+    NSLog(@"get color = %@", self.borderColor);
+    
     self.correct = YES;
     self.checkResult = @"Correct textField.";
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [UIView animateWithDuration:1.5f animations:^{
+            self.layer.borderColor = [[UIColor greenColor] CGColor];
+            self.layer.borderWidth = self.layer.borderWidth ? : 0.5f;
+            self.layer.cornerRadius = self.layer.cornerRadius ? : self.frame.size.height / 7.5;
+        }];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                     (int64_t)(1.5 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+                           self.layer.borderColor = self.borderColor;
+                           self.layer.borderWidth = self.borderWidth;
+                           self.layer.cornerRadius = self.cornerRadius;
+        });
+    });
     
-    [UIView animateWithDuration:1.5f delay:2.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        [[self layer] setBorderColor:[[UIColor greenColor] CGColor]];
-        //        [[self layer] setBorderWidth:self.borderWidth];
-        [[self layer] setCornerRadius:self.cornerRadius];
-        [[self layer] setBorderWidth:0.5f];
-    } completion:^(BOOL finished) {
-        [[self layer] setBorderColor:[[UIColor lightGrayColor] CGColor]];
-    }];
 }
 
 - (void)incorrectAnimation {
     NSLog(@"%zi", self.fieldType);
     self.correct = NO;
     [UIView animateWithDuration:0.9f animations:^{
-        [[self layer] setBorderColor:[[UIColor redColor] CGColor]];
-        [[self layer] setBorderWidth:0.5f];
-        [[self layer] setCornerRadius:self.frame.size.height/7.5f];
-    } completion:^(BOOL finished) {
-        
+        self.layer.borderColor = [[UIColor redColor] CGColor];
+        self.layer.borderWidth = self.layer.borderWidth ? : 0.5f;
+        self.layer.cornerRadius = self.layer.cornerRadius ? : self.frame.size.height / 7.5;
     }];
 }
 
@@ -183,7 +203,7 @@
     }
     
     if (!self.layer.borderWidth) {
-        self.layer.borderWidth = 0.5f;
+        self.layer.borderWidth = 1.5f;
     }
     
     if (!self.layer.cornerRadius) {
@@ -193,12 +213,12 @@
     self.layer.masksToBounds = YES;
     
     self.cornerRadius = self.layer.cornerRadius;
-    //    self.borderWidth = self.layer.borderWidth;
+    self.borderWidth = self.layer.borderWidth;
     self.borderColor = self.layer.borderColor;
     
-    NSLog(@"set radius = %f", self.cornerRadius);
-    //    NSLog(@"set width = %f", self.borderWidth);
-    //    NSLog(@"set color = %@", [UIColor colorWithCGColor:self.borderColor]);
+//    NSLog(@"set radius = %f", self.cornerRadius);
+//    NSLog(@"set width = %f", self.borderWidth);
+//    NSLog(@"set color = %@", [UIColor colorWithCGColor:self.borderColor]);
     
     switch (type) {
         case XCTextFieldTypeCellphone: {
@@ -252,7 +272,7 @@
         self.checkResult = @"Email Address in invalid format.";
         [self incorrectAnimation];
     } else {
-        [self correctAnimation];
+        self.correct ? : [self correctAnimation];
     }
 }
 
@@ -280,7 +300,7 @@
     }
     
     if (checkIDCard(self.text.UTF8String)) {
-        [self correctAnimation];
+        self.correct ? : [self correctAnimation];
     } else {
         [self incorrectAnimation];
     }
