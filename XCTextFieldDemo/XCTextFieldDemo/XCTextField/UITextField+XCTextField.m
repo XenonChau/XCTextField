@@ -10,9 +10,13 @@
 #import <objc/runtime.h>
 
 @interface UITextField ()
+/// @brief To save the origin layer.borderColor;
 @property (readwrite, nonatomic) CGColorRef borderColor;
+/// @brief To save the origin layer.borderWidth;
 @property (readwrite, nonatomic) CGFloat borderWidth;
+/// @brief To save the origin layer.cornerRadius;
 @property (readwrite, nonatomic) CGFloat cornerRadius;
+/// @brief When correct is true, border color will not change again.
 @property (readwrite, nonatomic) BOOL correct;
 @end
 
@@ -20,6 +24,121 @@
 @dynamic fieldType;
 @dynamic checkResult;
 
+#pragma mark - Initialiaze Configuration
+- (void)configurationWithType:(XCTextFieldType)type {
+    
+    self.clearButtonMode = UITextFieldViewModeWhileEditing;
+    
+    /*!
+     @todo HOW can I use only one enum property to control this TF?
+     */
+    self.fieldType = type;
+    
+    // Disable Apple auto suggestion as default.
+    self.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.spellCheckingType = UITextSpellCheckingTypeNo;
+    self.autocorrectionType = UITextAutocorrectionTypeNo;
+    
+    // Give self a default type, if user does NOT setup.
+    if (!self.layer.borderColor) {
+        self.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    }
+    if (!self.layer.borderWidth) {
+        self.layer.borderWidth = 1.5f;
+    }
+    if (!self.layer.cornerRadius) {
+        self.layer.cornerRadius = self.frame.size.height / 7.5f;
+    }
+    
+    // Save the origin border style.
+    self.cornerRadius = self.layer.cornerRadius;
+    self.borderWidth = self.layer.borderWidth;
+    self.borderColor = self.layer.borderColor;
+    
+    // Configure each type as well.
+    switch (type) {
+        case XCTextFieldTypeCellphone: {
+            self.keyboardType  = UIKeyboardTypePhonePad;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+            self.textContentType = UITextContentTypeTelephoneNumber;
+#endif
+            break;
+        }
+        case XCTextFieldTypePassword: {
+            self.secureTextEntry = YES;
+            self.keyboardType = UIKeyboardTypeASCIICapable;
+            break;
+        }
+        case XCTextFieldTypeEmail: {
+            self.keyboardType = UIKeyboardTypeEmailAddress;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+            self.textContentType = UITextContentTypeEmailAddress;
+#endif
+            break;
+        }
+        case XCTextFieldTypeCAPTCHA: {
+            self.keyboardType = UIKeyboardTypeNamePhonePad;
+            break;
+        }
+        case XCTextFieldTypeCreditCard: {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+            self.textContentType = UITextContentTypeCreditCardNumber;
+#else
+            self.keyboardType = UIKeyboardTypeNumberPad;
+#endif
+            break;
+        }
+        case XCTextFieldTypeIDCard: {
+            self.keyboardType = UIKeyboardTypeNamePhonePad;
+            break;
+        }
+        default: {
+            // default type.
+            break;
+        }
+    }
+}
+
+
+#pragma mark - Public method
+
+- (void)inputCheckForceCorrect:(BOOL)flag {
+    
+    // Check the text according to the rules.
+    
+    if (!self.text.length) {
+        // Verfy empty string.
+        self.checkResult = [NSString stringWithFormat:@"%@, Empty textField.", self];
+        [self incorrectAnimation];
+        !flag ? : [self becomeFirstResponderWhenFirstIncorrect];
+        return;
+    }
+    
+    // Rules:
+    switch (self.fieldType) {
+        case XCTextFieldTypeEmail: {
+            [self emailCheck];
+            break;
+        }
+        case XCTextFieldTypeIDCard: {
+            [self IDCardCheck];
+            break;
+        }
+        case XCTextFieldTypePassword: {
+            [self passwordCheck];
+            break;
+        }
+        default: {
+            self.correct ? : [self correctAnimation];
+            break;
+        }
+    }
+    
+    !flag ? : [self becomeFirstResponderWhenFirstIncorrect];
+}
+
+
+#pragma mark - #### BEGIN Properties setter getter ####
 - (void)setFieldType:(XCTextFieldType)newFieldType {
     objc_setAssociatedObject(self,
                              @selector(fieldType),
@@ -86,71 +205,10 @@
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
-- (void)becomeFirstResponderWhenFirstIncorrect {
-    
-    for (UIView *subview in self.superview.subviews) {
-        if ([subview isKindOfClass:[UITextField class]]) {
-            UITextField *textField = (UITextField *)subview;
-            if (!textField.correct) {
-                [textField becomeFirstResponder];
-                break;
-            }
-        }
-    }
-//    [[self class] howCanIUseSelfInClassMethod];
-}
+#pragma mark #### END Properties setter getter ####
+#pragma mark -
 
-+ (void)howCanIUseSelfInClassMethod {
-    
-    /**
-      * 一个科学试验：在 + 方法中找到 self 的对象指针。
-      *
-     */
-    
-    
-    for (UIView *subview in [(__bridge UIView *)class_getProperty([UIView class], "superview") subviews]) {
-        if ([subview isKindOfClass:self]) {
-            UITextField *textField = (UITextField *)subview;
-            if (!textField.correct) {
-                [textField becomeFirstResponder];
-                break;
-            }
-        }
-    }
-    NSLog(@"%@", self);
-}
-
-- (void)inputCheckForceCorrect:(BOOL)flag {
-    
-    if (!self.text.length) {
-        self.checkResult = [NSString stringWithFormat:@"%@, Empty textField.", self];
-        [self incorrectAnimation];
-        !flag ? : [self becomeFirstResponderWhenFirstIncorrect];
-        return;
-    }
-    
-    switch (self.fieldType) {
-        case XCTextFieldTypeEmail: {
-            [self emailCheck];
-            break;
-        }
-        case XCTextFieldTypeIDCard: {
-            [self IDCardCheck];
-            break;
-        }
-//        case XCTextFieldTypePassword: {
-//            
-//            break;
-//        }
-        default: {
-            self.correct ? : [self correctAnimation];
-            break;
-        }
-    }
-    
-    !flag ? : [self becomeFirstResponderWhenFirstIncorrect];
-}
-
+#pragma mark - Field Animation
 - (void)correctAnimation {
     
     NSLog(@"get radius = %f", self.cornerRadius);
@@ -188,83 +246,22 @@
     }];
 }
 
-- (void)configurationWithType:(XCTextFieldType)type {
+#pragma mark - Field Action
+- (void)becomeFirstResponderWhenFirstIncorrect {
     
-    self.clearButtonMode = UITextFieldViewModeWhileEditing;
-    
-    self.fieldType = type;
-    
-    self.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.spellCheckingType = UITextSpellCheckingTypeNo;
-    self.autocorrectionType = UITextAutocorrectionTypeNo;
-    
-    if (!self.layer.borderColor) {
-        self.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    }
-    
-    if (!self.layer.borderWidth) {
-        self.layer.borderWidth = 1.5f;
-    }
-    
-    if (!self.layer.cornerRadius) {
-        self.layer.cornerRadius = self.frame.size.height / 7.5f;
-    }
-    
-    self.layer.masksToBounds = YES;
-    
-    self.cornerRadius = self.layer.cornerRadius;
-    self.borderWidth = self.layer.borderWidth;
-    self.borderColor = self.layer.borderColor;
-    
-//    NSLog(@"set radius = %f", self.cornerRadius);
-//    NSLog(@"set width = %f", self.borderWidth);
-//    NSLog(@"set color = %@", [UIColor colorWithCGColor:self.borderColor]);
-    
-    switch (type) {
-        case XCTextFieldTypeCellphone: {
-            self.keyboardType  = UIKeyboardTypePhonePad;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-            self.textContentType = UITextContentTypeTelephoneNumber;
-#endif
-            break;
-        }
-        case XCTextFieldTypePassword: {
-            self.secureTextEntry = YES;
-            self.keyboardType = UIKeyboardTypeASCIICapable;
-            break;
-        }
-        case XCTextFieldTypeEmail: {
-            self.keyboardType = UIKeyboardTypeEmailAddress;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-            self.textContentType = UITextContentTypeEmailAddress;
-#endif
-            break;
-        }
-        case XCTextFieldTypeCAPTCHA: {
-            self.keyboardType = UIKeyboardTypeNamePhonePad;
-            break;
-        }
-        case XCTextFieldTypeCreditCard: {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-            self.textContentType = UITextContentTypeCreditCardNumber;
-#else
-            self.keyboardType = UIKeyboardTypeNumberPad;
-#endif
-            break;
-        }
-        case XCTextFieldTypeIDCard: {
-            self.keyboardType = UIKeyboardTypeNamePhonePad;
-            break;
-        }
-        default: {
-            // default type.
-            break;
+    for (UIView *subview in self.superview.subviews) {
+        if ([subview isKindOfClass:[UITextField class]]) {
+            UITextField *textField = (UITextField *)subview;
+            if (!textField.correct) {
+                [textField becomeFirstResponder];
+                break;
+            }
         }
     }
+    //    [[self class] howCanIUseSelfInClassMethod];
 }
 
-#pragma mark - Text Field Check
-
+#pragma mark - Text Check
 - (void)emailCheck {
     NSString *emailRegEx = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
     NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
@@ -274,6 +271,10 @@
     } else {
         self.correct ? : [self correctAnimation];
     }
+}
+
+- (void)passwordCheck {
+    
 }
 
 - (void)creditCardCheck {
@@ -328,6 +329,28 @@ bool checkIDCard(const char *idCardString) {
         return false;
     }
     
+}
+
+
+#pragma mark - Test Method
++ (void)howCanIUseSelfInClassMethod {
+    
+    /**
+     * 一个科学试验：在 + 方法中找到 self 的对象指针。
+     *
+     */
+    
+    
+    for (UIView *subview in [(__bridge UIView *)class_getProperty([UIView class], "superview") subviews]) {
+        if ([subview isKindOfClass:self]) {
+            UITextField *textField = (UITextField *)subview;
+            if (!textField.correct) {
+                [textField becomeFirstResponder];
+                break;
+            }
+        }
+    }
+    NSLog(@"%@", self);
 }
 
 @end
