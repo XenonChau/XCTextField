@@ -24,6 +24,111 @@
 @dynamic fieldType;
 @dynamic checkResult;
 
+
+@dynamic configuration;
+
+- (void)updateConfiguration:(id<XCTextFieldConfiguration>)configuration {
+    id<XCTextFieldValidator> validator = configuration;
+    id<XCTextFieldInputTraits> inputTraits = configuration;
+    
+    self.validator = validator;
+    self.inputTraits = inputTraits;
+}
+
+- (void)updateValidator:(id<XCTextFieldValidator>)validator {
+    BOOL responds = [validator respondsToSelector:@selector(isValidTextField:error:)];
+    NSAssert(responds, @"validator: %@ must implementation isValidTextField:error: method", validator);
+    if (!responds) return;
+    
+    NSError *error;
+    BOOL isValid = [validator isValidTextField:self error:&error];
+    
+//    willValidatorTextField
+//    derive inspiration (from sb./sth.)
+}
+
+- (void)updateInputTraits:(id<XCTextFieldInputTraits>)inputTraits {
+    UITextAutocapitalizationType autocapitalizationType = [inputTraits respondsToSelector:@selector(autocapitalizationType)] ? [inputTraits autocapitalizationType] : self.autocapitalizationType;
+    self.autocapitalizationType = autocapitalizationType;
+    
+    UITextAutocorrectionType autocorrectionType = [inputTraits respondsToSelector:@selector(autocorrectionType)] ? [inputTraits autocorrectionType] : self.autocorrectionType;
+    self.autocorrectionType = autocorrectionType;
+    
+    UITextSpellCheckingType spellCheckingType = [inputTraits respondsToSelector:@selector(spellCheckingType)] ? [inputTraits spellCheckingType] : self.spellCheckingType;
+    self.spellCheckingType = spellCheckingType;
+    
+    UIKeyboardType keyboardType = [inputTraits respondsToSelector:@selector(keyboardType)] ? [inputTraits keyboardType] : self.keyboardType;
+    self.keyboardType = keyboardType;
+    
+    UIKeyboardAppearance keyboardAppearance = [inputTraits respondsToSelector:@selector(keyboardAppearance)] ? [inputTraits keyboardAppearance] : self.keyboardAppearance;
+    self.keyboardAppearance = keyboardAppearance;
+    
+    UIReturnKeyType returnKeyType = [inputTraits respondsToSelector:@selector(returnKeyType)] ? [inputTraits returnKeyType] : self.returnKeyType;
+    self.returnKeyType = returnKeyType;
+    
+    BOOL enablesReturnKeyAutomatically = [inputTraits respondsToSelector:@selector(enablesReturnKeyAutomatically)] ? [inputTraits enablesReturnKeyAutomatically] : self.enablesReturnKeyAutomatically;
+    self.enablesReturnKeyAutomatically = enablesReturnKeyAutomatically;
+    
+    BOOL secureTextEntry = [inputTraits respondsToSelector:@selector(isSecureTextEntry)] ? [inputTraits isSecureTextEntry] : self.secureTextEntry;
+    self.enablesReturnKeyAutomatically = secureTextEntry;
+    
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+    UITextContentType textContentType = [inputTraits respondsToSelector:@selector(textContentType)] ? [inputTraits textContentType] : self.textContentType;
+    self.textContentType = textContentType;
+#endif
+}
+
+#pragma mark - #### BEGIN Properties setter getter ####
+
+- (void)setConfiguration:(id<XCTextFieldConfiguration>)configuration {
+    BOOL conforms = [configuration conformsToProtocol:@protocol(XCTextFieldConfiguration)];
+    NSAssert(conforms, @"configuration: %@ must conforms XCTextFieldConfiguration Protocol", configuration);
+    if (!conforms) return;
+    
+    objc_setAssociatedObject(self,
+                             @selector(configuration),
+                             configuration,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self updateConfiguration:configuration];
+}
+
+- (id<XCTextFieldConfiguration>)configuration {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setValidator:(id<XCTextFieldValidator>)validator {
+    BOOL conforms = [validator conformsToProtocol:@protocol(XCTextFieldValidator)];
+    NSAssert(conforms, @"validator: %@ must conforms XCTextFieldValidator Protocol", validator);
+    if (!conforms) return;
+    
+    objc_setAssociatedObject(self,
+                             @selector(validator),
+                             validator,
+                             OBJC_ASSOCIATION_ASSIGN);
+    [self updateValidator:validator];
+}
+
+- (id<XCTextFieldValidator>)validator {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setInputTraits:(id<XCTextFieldInputTraits>)inputTraits {
+    BOOL conforms = [inputTraits conformsToProtocol:@protocol(XCTextFieldInputTraits)];
+    NSAssert(conforms, @"inputTraits: %@ must conforms XCTextFieldInputTraits Protocol", inputTraits);
+    if (!conforms) return;
+    
+    objc_setAssociatedObject(self,
+                             @selector(inputTraits),
+                             inputTraits,
+                             OBJC_ASSOCIATION_ASSIGN);
+    [self updateInputTraits:inputTraits];
+}
+
+- (id<XCTextFieldInputTraits>)inputTraits {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+
 #pragma mark - Initialiaze Configuration
 - (void)configurationWithType:(XCTextFieldType)type {
     

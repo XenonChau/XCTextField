@@ -15,6 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "XCTextFieldProtocol.h"
 
 typedef NS_ENUM(NSInteger, XCTextFieldType) {
     XCTextFieldTypeDefault             = 0,
@@ -28,6 +29,11 @@ typedef NS_ENUM(NSInteger, XCTextFieldType) {
 };
 
 @interface UITextField (XCTextField)
+
+@property(nonatomic, strong) id<XCTextFieldConfiguration> configuration;
+
+@property(nonatomic, assign) id<XCTextFieldValidator>validator;//TODO:weak
+@property(nonatomic, assign) id<XCTextFieldInputTraits>inputTraits;//TODO:weak
 
 /**
     @todo Control the style using only this property.
