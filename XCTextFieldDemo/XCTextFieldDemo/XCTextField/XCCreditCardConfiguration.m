@@ -15,14 +15,14 @@ static NSString *const kCreditCardfailureReason = @"Credit card number in invali
 
 -(BOOL)isValidTextField:(nullable UITextField *)textField
                   error:(NSError * _Nullable __autoreleasing *)error {
-    BOOL valid = [textField.text creditCardluhmValid0];
+    BOOL valid = [textField.text creditCardluhmValid1];
     if (valid) return YES;
     
     *error = XCTextFieldErrorFromString(kCreditCardfailureReason);
     return NO;
 }
 
-#pragma mark - XCTextFieldInputTraits
+#pragma mark - UITextInputTraits
 
 - (UIKeyboardType)keyboardType{
     return UIKeyboardTypeNumberPad;

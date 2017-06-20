@@ -24,7 +24,7 @@ static NSString *const kCallPhonefailureReason = @"Phone number in invalid forma
     return NO;
 }
 
-#pragma mark - XCTextFieldInputTraits
+#pragma mark - UITextInputTraits
 
 - (UIKeyboardType)keyboardType{
     return UIKeyboardTypePhonePad;

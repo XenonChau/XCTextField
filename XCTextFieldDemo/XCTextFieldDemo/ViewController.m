@@ -7,15 +7,15 @@
 //
 
 #import "ViewController.h"
-#import "UITextField+XCTextField.h"
+#import "XCTextField.h"
 
 @interface ViewController () <UITextFieldDelegate>
-@property (weak, nonatomic) IBOutlet UITextField *cellPhoneTextField;
-@property (weak, nonatomic) IBOutlet UITextField *IDCardTextField;
-@property (weak, nonatomic) IBOutlet UITextField *emailTextField;
-@property (weak, nonatomic) IBOutlet UITextField *creditCardTextField;
-@property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
-@property (weak, nonatomic) IBOutlet UITextField *CAPTCHATextField;
+@property (weak, nonatomic) IBOutlet XCTextField *cellPhoneTextField;
+@property (weak, nonatomic) IBOutlet XCTextField *IDCardTextField;
+@property (weak, nonatomic) IBOutlet XCTextField *emailTextField;
+@property (weak, nonatomic) IBOutlet XCTextField *creditCardTextField;
+@property (weak, nonatomic) IBOutlet XCTextField *passwordTextField;
+@property (weak, nonatomic) IBOutlet XCTextField *CAPTCHATextField;
 
 @property (weak, nonatomic) IBOutlet UIButton *checkButton;
 @end
@@ -33,20 +33,19 @@
     [_creditCardTextField configurationWithType:XCTextFieldTypeCreditCard];
     [_passwordTextField configurationWithType:XCTextFieldTypePassword];
     [_CAPTCHATextField configurationWithType:XCTextFieldTypeCAPTCHA];
-    
 }
 
 - (IBAction)checkButtonAction:(UIButton *)button {
     
     for (UIView *subview in self.view.subviews) {
-        if ([subview isKindOfClass:[UITextField class]]) {
-            [(UITextField *)subview inputCheckForceCorrect:YES];
+        if ([subview isKindOfClass:[XCTextField class]]) {
+            [(XCTextField *)subview inputCheckForceCorrect:YES];
         }
     }
     
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField {
+- (void)textFieldDidEndEditing:(XCTextField *)textField {
     [textField inputCheckForceCorrect:NO];
 }
 

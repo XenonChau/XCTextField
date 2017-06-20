@@ -10,37 +10,32 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NSString * const XTTextFieldValidatorErrorDomain = @"com.xctextfield.error.validator";
+static NSString * const XTTextFieldValidatorErrorDomain = @"com.xctextfield.error.validator";
 
 @protocol XCTextFieldValidator <NSObject>
 
 @required
-- (BOOL)isValidTextField:(nullable UITextField *)textField
+- (BOOL)isValidTextField:(nullable __kindof UITextField *)textField
                   error:(NSError * _Nullable __autoreleasing *)error;
 
 @optional
-
 - (BOOL)textFieldShouldValidator:(UITextField *)textField;
 
-- (void)willValidatorTextField:(nullable UITextField *)textField;
-- (void)didEndValidatorTextField:(nullable UITextField *)textField;
-
-@end
-
-@protocol XCTextFieldInputTraits <UITextInputTraits>
-
-@end
-
-@protocol XCTextFieldConfiguration <XCTextFieldValidator,XCTextFieldInputTraits>
+- (void)willValidatorTextField:(nullable __kindof UITextField *)textField;
+- (void)didEndValidatorTextField:(nullable __kindof UITextField *)textField error:(NSError *)error;
 
 @end
 
 @protocol XCTextFieldTextDisplay <NSObject>
 
-
+@optional
+- (void)correctTextField:(nullable __kindof UITextField *)textField;
+- (void)incorrectTextField:(nullable __kindof UITextField *)textField error:(NSError *)error;
 
 @end
 
+@protocol XCTextFieldConfiguration <XCTextFieldValidator,UITextInputTraits>
 
+@end
 
 NS_ASSUME_NONNULL_END

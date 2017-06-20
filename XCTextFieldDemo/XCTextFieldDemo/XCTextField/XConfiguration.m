@@ -15,7 +15,22 @@ NSError * XCTextFieldErrorFromString(NSString *string) {
 
 @implementation XConfiguration
 
-#pragma mark - XCTextFieldInputTraits
++ (instancetype)configuration {
+    return [[self alloc] init];
+}
+
+#pragma mark - XCTextFieldValidator
+
+- (BOOL)textFieldShouldValidator:(UITextField *)textField {
+    return YES;
+}
+
+- (BOOL)isValidTextField:(nullable UITextField *)textField
+                   error:(NSError * _Nullable __autoreleasing *)error {
+    return YES;
+}
+
+#pragma mark - UITextInputTraits
 
 - (UITextAutocapitalizationType)autocapitalizationType{
     return UITextAutocapitalizationTypeNone;

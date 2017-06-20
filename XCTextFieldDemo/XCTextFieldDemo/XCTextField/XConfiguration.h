@@ -13,4 +13,6 @@ FOUNDATION_EXPORT NSError * XCTextFieldErrorFromString(NSString *string);
 
 @interface XConfiguration : NSObject <XCTextFieldConfiguration>
 
++ (instancetype)configuration;
+
 @end

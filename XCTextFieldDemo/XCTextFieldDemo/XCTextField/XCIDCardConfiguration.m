@@ -24,7 +24,7 @@ static NSString *const kIDCardfailureReason = @"ID card number in invalid format
     return NO;
 }
 
-#pragma mark - XCTextFieldInputTraits
+#pragma mark - UITextInputTraits
 
 - (UIKeyboardType)keyboardType{
     return UIKeyboardTypeNamePhonePad;

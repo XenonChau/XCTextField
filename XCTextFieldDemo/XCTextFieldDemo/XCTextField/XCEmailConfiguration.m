@@ -22,7 +22,7 @@ static NSString *const kEmailfailureReason = @"Email Address in invalid format."
     return self;
 }
 
-#pragma mark - XCTextFieldInputTraits <UITextInputTraits>
+#pragma mark - UITextInputTraits
 
 - (UIKeyboardType)keyboardType{
     return UIKeyboardTypeEmailAddress;

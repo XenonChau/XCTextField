@@ -8,6 +8,6 @@
 
 #import "XConfiguration.h"
 
-@interface XCCallPhoneConfiguration : XConfiguration<XCTextFieldValidator, XCTextFieldInputTraits>
+@interface XCCallPhoneConfiguration : XConfiguration<XCTextFieldValidator, UITextInputTraits>
 
 @end
