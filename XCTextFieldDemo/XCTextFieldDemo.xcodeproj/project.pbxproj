@@ -13,7 +13,15 @@
 		740D00C21EC603E70014C2D1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 740D00C01EC603E70014C2D1 /* Main.storyboard */; };
 		740D00C41EC603E70014C2D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 740D00C31EC603E70014C2D1 /* Assets.xcassets */; };
 		740D00C71EC603E70014C2D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 740D00C51EC603E70014C2D1 /* LaunchScreen.storyboard */; };
-		740D00D11EC604570014C2D1 /* UITextField+XCTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 740D00D01EC604570014C2D1 /* UITextField+XCTextField.m */; };
+		7F4E2C8D1EF8FF0C00DBAAEB /* XCTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F4E2C8C1EF8FF0C00DBAAEB /* XCTextField.m */; };
+		7F54BB8F1EF388B400ACC8F0 /* XCEmailConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F54BB8E1EF388B400ACC8F0 /* XCEmailConfiguration.m */; };
+		7F54BB921EF38E5D00ACC8F0 /* XCRegexConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F54BB911EF38E5D00ACC8F0 /* XCRegexConfiguration.m */; };
+		7F54BB951EF3BCDD00ACC8F0 /* XConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F54BB941EF3BCDD00ACC8F0 /* XConfiguration.m */; };
+		7F54BB981EF3BFED00ACC8F0 /* XCCallPhoneConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F54BB971EF3BFED00ACC8F0 /* XCCallPhoneConfiguration.m */; };
+		7F54BB9E1EF3CCBA00ACC8F0 /* XCCreditCardConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F54BB9D1EF3CCBA00ACC8F0 /* XCCreditCardConfiguration.m */; };
+		7F54BBA11EF3CECE00ACC8F0 /* NSString+XCValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F54BBA01EF3CECE00ACC8F0 /* NSString+XCValidator.m */; };
+		7F54BBA41EF3D1E200ACC8F0 /* XCIDCardConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F54BBA31EF3D1E200ACC8F0 /* XCIDCardConfiguration.m */; };
+		7FA60E0D1EF920D1003A0444 /* UITextField+XCTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 740D00D01EC604570014C2D1 /* UITextField+XCTextField.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +37,23 @@
 		740D00C81EC603E70014C2D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		740D00CF1EC604570014C2D1 /* UITextField+XCTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+XCTextField.h"; sourceTree = "<group>"; };
 		740D00D01EC604570014C2D1 /* UITextField+XCTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+XCTextField.m"; sourceTree = "<group>"; };
+		7F4E2C8B1EF8FF0C00DBAAEB /* XCTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTextField.h; sourceTree = "<group>"; };
+		7F4E2C8C1EF8FF0C00DBAAEB /* XCTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCTextField.m; sourceTree = "<group>"; };
+		7F54BB8C1EF3820200ACC8F0 /* XCTextFieldProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTextFieldProtocol.h; sourceTree = "<group>"; };
+		7F54BB8D1EF388B400ACC8F0 /* XCEmailConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCEmailConfiguration.h; sourceTree = "<group>"; };
+		7F54BB8E1EF388B400ACC8F0 /* XCEmailConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCEmailConfiguration.m; sourceTree = "<group>"; };
+		7F54BB901EF38E5D00ACC8F0 /* XCRegexConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCRegexConfiguration.h; sourceTree = "<group>"; };
+		7F54BB911EF38E5D00ACC8F0 /* XCRegexConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCRegexConfiguration.m; sourceTree = "<group>"; };
+		7F54BB931EF3BCDD00ACC8F0 /* XConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XConfiguration.h; sourceTree = "<group>"; };
+		7F54BB941EF3BCDD00ACC8F0 /* XConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XConfiguration.m; sourceTree = "<group>"; };
+		7F54BB961EF3BFED00ACC8F0 /* XCCallPhoneConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCCallPhoneConfiguration.h; sourceTree = "<group>"; };
+		7F54BB971EF3BFED00ACC8F0 /* XCCallPhoneConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCCallPhoneConfiguration.m; sourceTree = "<group>"; };
+		7F54BB9C1EF3CCBA00ACC8F0 /* XCCreditCardConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCCreditCardConfiguration.h; sourceTree = "<group>"; };
+		7F54BB9D1EF3CCBA00ACC8F0 /* XCCreditCardConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCCreditCardConfiguration.m; sourceTree = "<group>"; };
+		7F54BB9F1EF3CECE00ACC8F0 /* NSString+XCValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+XCValidator.h"; sourceTree = "<group>"; };
+		7F54BBA01EF3CECE00ACC8F0 /* NSString+XCValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+XCValidator.m"; sourceTree = "<group>"; };
+		7F54BBA21EF3D1E200ACC8F0 /* XCIDCardConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCIDCardConfiguration.h; sourceTree = "<group>"; };
+		7F54BBA31EF3D1E200ACC8F0 /* XCIDCardConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCIDCardConfiguration.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +113,23 @@
 			children = (
 				740D00CF1EC604570014C2D1 /* UITextField+XCTextField.h */,
 				740D00D01EC604570014C2D1 /* UITextField+XCTextField.m */,
+				7F54BB8C1EF3820200ACC8F0 /* XCTextFieldProtocol.h */,
+				7F54BB9F1EF3CECE00ACC8F0 /* NSString+XCValidator.h */,
+				7F54BBA01EF3CECE00ACC8F0 /* NSString+XCValidator.m */,
+				7F54BB931EF3BCDD00ACC8F0 /* XConfiguration.h */,
+				7F54BB941EF3BCDD00ACC8F0 /* XConfiguration.m */,
+				7F54BB8D1EF388B400ACC8F0 /* XCEmailConfiguration.h */,
+				7F54BB8E1EF388B400ACC8F0 /* XCEmailConfiguration.m */,
+				7F54BB961EF3BFED00ACC8F0 /* XCCallPhoneConfiguration.h */,
+				7F54BB971EF3BFED00ACC8F0 /* XCCallPhoneConfiguration.m */,
+				7F54BB901EF38E5D00ACC8F0 /* XCRegexConfiguration.h */,
+				7F54BB911EF38E5D00ACC8F0 /* XCRegexConfiguration.m */,
+				7F54BB9C1EF3CCBA00ACC8F0 /* XCCreditCardConfiguration.h */,
+				7F54BB9D1EF3CCBA00ACC8F0 /* XCCreditCardConfiguration.m */,
+				7F54BBA21EF3D1E200ACC8F0 /* XCIDCardConfiguration.h */,
+				7F54BBA31EF3D1E200ACC8F0 /* XCIDCardConfiguration.m */,
+				7F4E2C8B1EF8FF0C00DBAAEB /* XCTextField.h */,
+				7F4E2C8C1EF8FF0C00DBAAEB /* XCTextField.m */,
 			);
 			path = XCTextField;
 			sourceTree = "<group>";
@@ -164,9 +206,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FA60E0D1EF920D1003A0444 /* UITextField+XCTextField.m in Sources */,
+				7F54BB9E1EF3CCBA00ACC8F0 /* XCCreditCardConfiguration.m in Sources */,
+				7F54BB921EF38E5D00ACC8F0 /* XCRegexConfiguration.m in Sources */,
 				740D00BF1EC603E70014C2D1 /* ViewController.m in Sources */,
+				7F54BB951EF3BCDD00ACC8F0 /* XConfiguration.m in Sources */,
+				7F4E2C8D1EF8FF0C00DBAAEB /* XCTextField.m in Sources */,
+				7F54BB981EF3BFED00ACC8F0 /* XCCallPhoneConfiguration.m in Sources */,
 				740D00BC1EC603E70014C2D1 /* AppDelegate.m in Sources */,
-				740D00D11EC604570014C2D1 /* UITextField+XCTextField.m in Sources */,
+				7F54BBA41EF3D1E200ACC8F0 /* XCIDCardConfiguration.m in Sources */,
+				7F54BBA11EF3CECE00ACC8F0 /* NSString+XCValidator.m in Sources */,
+				7F54BB8F1EF388B400ACC8F0 /* XCEmailConfiguration.m in Sources */,
 				740D00B91EC603E70014C2D1 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -289,6 +339,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = TEHUHD2DQV;
 				INFOPLIST_FILE = XCTextFieldDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Code1Bit.XCTextFieldDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -301,6 +352,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = TEHUHD2DQV;
 				INFOPLIST_FILE = XCTextFieldDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Code1Bit.XCTextFieldDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

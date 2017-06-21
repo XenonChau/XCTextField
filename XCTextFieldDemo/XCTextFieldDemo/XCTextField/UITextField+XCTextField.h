@@ -15,40 +15,16 @@
  */
 
 #import <UIKit/UIKit.h>
-
-typedef NS_ENUM(NSInteger, XCTextFieldType) {
-    XCTextFieldTypeDefault             = 0,
-    XCTextFieldTypeCellphone        = 1,
-    XCTextFieldTypeEmail                = 2,
-    XCTextFieldTypePassword         = 3,
-    XCTextFieldTypeCAPTCHA        = 4,
-    XCTextFieldTypeCreditCard       = 5,
-    XCTextFieldTypeIDCard             = 6,
-    XCTextFieldTypeCurrency          = 7,
-};
+#import "XCTextFieldProtocol.h"
 
 @interface UITextField (XCTextField)
 
-/**
-    @todo Control the style using only this property.
- */
-@property (assign, nonatomic) XCTextFieldType fieldType;
+@property(nonatomic, strong) id<XCTextFieldConfiguration> configuration;
 
-/**
-    @result The error reason or correct message.
- */
-@property (copy   , nonatomic) NSString *checkResult;
+@property(nonatomic, assign) id<XCTextFieldValidator>validator;//TODO:weak
+@property(nonatomic, assign) id<XCTextFieldTextDisplay>textFieldDisplay;//TODO:weak
+@property(nonatomic, assign) id<UITextInputTraits>inputTraits;//TODO:weak
 
-/**
-    @brief Set up Customized TextField
-    @param type Factory partten control
- */
-- (void)configurationWithType:(XCTextFieldType)type;
-
-/**
-    @brief For text checking according to the rules.
-    @param flag TextField become first responder if it's true.
- */
-- (void)inputCheckForceCorrect:(BOOL)flag;
+- (void)xc_doValidation;
 
 @end
